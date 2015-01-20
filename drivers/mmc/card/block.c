@@ -2476,6 +2476,7 @@ force_ro_fail:
 #define CID_MANFID_TOSHIBA	0x11
 #define CID_MANFID_MICRON	0x13
 #define CID_MANFID_SAMSUNG	0x15
+#define CID_MANFID_HTC		0x15
 
 static const struct mmc_fixup blk_fixups[] =
 {
@@ -2537,6 +2538,10 @@ static const struct mmc_fixup blk_fixups[] =
 		  MMC_QUIRK_SEC_ERASE_TRIM_BROKEN),
 	MMC_FIXUP("VZL00M", CID_MANFID_SAMSUNG, CID_OEMID_ANY, add_quirk_mmc,
 		  MMC_QUIRK_SEC_ERASE_TRIM_BROKEN),
+
+	/* Used in HTC Sensation, random "softbrick" when formating /data with TWRP */
+	MMC_FIXUP("MLL00M", CID_MANFID_HTC, CID_OEMID_ANY, add_quirk_mmc,
+	          MMC_QUIRK_SEC_ERASE_TRIM_BROKEN),
 
 	END_FIXUP
 };
