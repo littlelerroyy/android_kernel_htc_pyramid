@@ -426,14 +426,14 @@ void __init pyramid_pm8901_gpio_mpp_init(void)
 /* SAW regulator constraints */
 struct regulator_init_data msm_saw_regulator_pdata_s0 =
 	/*	      ID  vreg_name	       min_uV   max_uV */
-	SAW_VREG_INIT(PM8901_S0, "8901_s0",	       700000, 1300000); // CPU Vcore 0
+	SAW_VREG_INIT(PM8901_S0, "8901_s0",	       700000, 1350000); // CPU Vcore 0
 struct regulator_init_data msm_saw_regulator_pdata_s1 =
-	SAW_VREG_INIT(PM8901_S1, "8901_s1",	       700000, 1300000); // CPU Vcore 1
+	SAW_VREG_INIT(PM8901_S1, "8901_s1",	       700000, 1350000); // CPU Vcore 1
 
 /* RPM regulator constraints */
 static struct rpm_regulator_init_data rpm_regulator_early_init_data[] __devinitdata = {
 	/*	 ID       a_on pd ss min_uV   max_uV   init_ip    freq */
-	RPM_SMPS(PM8058_S0, 0, 1, 1,  500000, 1300000, SMPS_HMIN, 1p92), // VDD_MEM (L2 Cache)
+	RPM_SMPS(PM8058_S0, 0, 1, 1,  500000, 1350000, SMPS_HMIN, 1p92), // VDD_MEM (L2 Cache)
 	RPM_SMPS(PM8058_S1, 0, 1, 1,  500000, 1200000, SMPS_HMIN, 1p92), // VDD_DIG
 };
 
