@@ -137,7 +137,6 @@ struct thermal_zone_device {
 	struct mutex lock;	/* protect cooling devices list */
 	struct list_head node;
 	struct delayed_work poll_queue;
-	int thermal_trip_critical_retry_count;
 	struct sensor_threshold tz_threshold[2];
 	struct sensor_info sensor;
 };
@@ -194,9 +193,9 @@ int thermal_sensor_trip(struct thermal_zone_device *tz,
 		enum thermal_trip_type trip, long temp);
 
 #ifdef CONFIG_NET
-extern int generate_netlink_event(u32 orig, enum events event);
+extern int thermal_generate_netlink_event(u32 orig, enum events event);
 #else
-static inline int generate_netlink_event(u32 orig, enum events event)
+static inline int thermal_generate_netlink_event(u32 orig, enum events event)
 {
 	return 0;
 }
