@@ -31,7 +31,7 @@
 #include <mach/qdsp6v2/audio_dev_ctl.h>
 
 #define MAX_BUF 2
-#define BUFSZ (4800)
+#define BUFSZ (5248)
 
 struct pcm {
 	struct mutex lock;
@@ -305,7 +305,7 @@ static int pcm_out_open(struct inode *inode, struct file *file)
 	}
 
 	pcm->channel_count = 2;
-	pcm->sample_rate = 44100;
+	pcm->sample_rate = 48000;
 	pcm->buffer_size = BUFSZ;
 	pcm->buffer_count = MAX_BUF;
 	pcm->stream_event = AUDDEV_EVT_STREAM_VOL_CHG;
