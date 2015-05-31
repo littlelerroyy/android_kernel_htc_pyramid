@@ -214,6 +214,42 @@ void voltage_off(void)
 	if (audio_ops->voltage_on)
 		audio_ops->voltage_on(0);
 }
+
+
+static struct resource msm_mi2s_gpio_resources[] = {
+
+	{
+		.name   = "mi2s_ws",
+		.start  = 101,
+		.end    = 101,
+		.flags  = IORESOURCE_IO,
+	},
+	{
+		.name   = "mi2s_sclk",
+		.start  = 102,
+		.end    = 102,
+		.flags  = IORESOURCE_IO,
+	},
+	{
+		.name   = "mi2s_mclk",
+		.start  = 103,
+		.end    = 103,
+		.flags  = IORESOURCE_IO,
+	},
+	{
+		.name   = "fm_mi2s_sd",
+		.start  = 107,
+		.end    = 107,
+		.flags  = IORESOURCE_IO,
+	},
+};
+
+static struct platform_device msm_mi2s_device = {
+	.name		= "msm_mi2s",
+	.num_resources	= ARRAY_SIZE(msm_mi2s_gpio_resources),
+	.resource	= msm_mi2s_gpio_resources,
+};
+
 #else
 #define DSP_RAM_BASE_8x60 0x46700000
 #define DSP_RAM_SIZE_8x60 0x2000000
@@ -288,40 +324,6 @@ static struct platform_device msm_aux_pcm_device = {
 	.name   = "msm_aux_pcm",
 	.num_resources  = ARRAY_SIZE(msm_aux_pcm_resources),
 	.resource       = msm_aux_pcm_resources,
-};
-
-static struct resource msm_mi2s_gpio_resources[] = {
-
-	{
-		.name   = "mi2s_ws",
-		.start  = 101,
-		.end    = 101,
-		.flags  = IORESOURCE_IO,
-	},
-	{
-		.name   = "mi2s_sclk",
-		.start  = 102,
-		.end    = 102,
-		.flags  = IORESOURCE_IO,
-	},
-	{
-		.name   = "mi2s_mclk",
-		.start  = 103,
-		.end    = 103,
-		.flags  = IORESOURCE_IO,
-	},
-	{
-		.name   = "fm_mi2s_sd",
-		.start  = 107,
-		.end    = 107,
-		.flags  = IORESOURCE_IO,
-	},
-};
-
-static struct platform_device msm_mi2s_device = {
-	.name		= "msm_mi2s",
-	.num_resources	= ARRAY_SIZE(msm_mi2s_gpio_resources),
-	.resource	= msm_mi2s_gpio_resources,
 };
 
 /* Must be same size as msm_icodec_gpio_resources */
@@ -4040,10 +4042,10 @@ static struct platform_device *snd_devices_fluid[] __initdata = {
 static struct platform_device *snd_devices_common[] __initdata = {
 #ifdef CONFIG_MACH_HTC
 	&msm_uplink_rx_device,
+	&msm_mi2s_device,
 #else
 	&msm_aux_pcm_device,
 	&msm_cdcclk_ctl_device,
-	&msm_mi2s_device,
 	&msm_uplink_rx_device,
 	&msm_device_dspcrashd_8x60,
 #endif
@@ -4150,6 +4152,9 @@ void __init msm_snddev_init(void)
 	atomic_set(&preg_ref_cnt, 0);
 
 #ifdef CONFIG_MACH_HTC
+    for (i = 0, dev_id = 0; i < ARRAY_SIZE(snd_devices_htc); i++)
+		snd_devices_htc[i]->id = dev_id++;
+
 	platform_add_devices(snd_devices_htc, ARRAY_SIZE(snd_devices_htc));
 #endif
 
