@@ -104,6 +104,7 @@
 #include <mach/htc_headset_gpio.h>
 #include <mach/htc_headset_pmic.h>
 #include <mach/htc_headset_8x60.h>
+#include <linux/msm_tsens.h>
 
 #ifdef CONFIG_FB_MSM_HDMI_MHL
 #include <mach/mhl.h>
@@ -1307,10 +1308,19 @@ static struct platform_device *early_devices[] __initdata = {
 #endif
 };
 
+#ifdef CONFIG_THERMAL_TSENS8X60
+static struct tsens_platform_data msm_tsens_pdata  = {
+		.slope 			= {702, 702, 702, 702, 702},
+		.tsens_factor		= 1000,
+		.hw_type		= MSM_8660,
+		.tsens_num_sensor	= 6,
+};
+#else
 static struct platform_device msm_tsens_device = {
 	.name   = "tsens-tm",
 	.id = -1,
 };
+#endif
 
 /* HTC_HEADSET_GPIO Driver */
 static struct htc_headset_gpio_platform_data htc_headset_gpio_data = {
@@ -1784,7 +1794,9 @@ static struct platform_device *pyramid_devices[] __initdata = {
 #ifdef CONFIG_LEDS_PM8058
 	&pm8058_leds,
 #endif
+#ifndef CONFIG_THERMAL_TSENS8X60
 	&msm_tsens_device,
+#endif
         &cable_detect_device,
 	&msm8660_rpm_device,
 #ifdef CONFIG_ION_MSM
@@ -2318,6 +2330,10 @@ static void __init pyramid_init(void)
 
 	raw_speed_bin = readl(QFPROM_SPEED_BIN_ADDR);
 	speed_bin = raw_speed_bin & 0xF;
+
+#ifdef CONFIG_THERMAL_TSENS8X60
+	msm_tsens_early_init(&msm_tsens_pdata);
+#endif
 
 	BUG_ON(msm_rpm_init(&msm8660_rpm_data));
 	BUG_ON(msm_rpmrs_levels_init(&msm_rpmrs_data));

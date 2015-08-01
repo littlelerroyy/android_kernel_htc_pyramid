@@ -11,7 +11,7 @@
  *
  */
 /*
- * Qualcomm MSM8960 TSENS driver
+ * Qualcomm MSM8x60 TSENS driver
  *
  */
 
@@ -198,7 +198,7 @@ static int tsens_tz_degC_to_code(int degC, int sensor_num)
 	return code;
 }
 
-static void tsens8960_get_temp(int sensor_num, unsigned long *temp)
+static void tsens8x60_get_temp(int sensor_num, unsigned long *temp)
 {
 	unsigned int code, offset = 0, sensor_addr;
 
@@ -227,7 +227,7 @@ static int tsens_tz_get_temp(struct thermal_zone_device *thermal,
 	if (!tm_sensor || tm_sensor->mode != THERMAL_DEVICE_ENABLED || !temp)
 		return -EINVAL;
 
-	tsens8960_get_temp(tm_sensor->sensor_num, temp);
+	tsens8x60_get_temp(tm_sensor->sensor_num, temp);
 
 	return 0;
 }
@@ -237,7 +237,7 @@ int tsens_get_temp(struct tsens_device *device, unsigned long *temp)
 	if (!tmdev)
 		return -ENODEV;
 
-	tsens8960_get_temp(device->sensor_num, temp);
+	tsens8x60_get_temp(device->sensor_num, temp);
 
 	return 0;
 }
@@ -682,7 +682,7 @@ static irqreturn_t tsens_isr(int irq, void *data)
 	return IRQ_HANDLED;
 }
 
-static void tsens8960_sensor_mode_init(void)
+static void tsens8x60_sensor_mode_init(void)
 {
 	unsigned int reg_cntl = 0;
         unsigned int reg = 0, mask = 0, i = 0;
@@ -1045,7 +1045,7 @@ static int __devinit tsens_tm_probe(struct platform_device *pdev)
 		}
 		tmdev->sensor[i].mode = THERMAL_DEVICE_DISABLED;
 	}
-	tsens8960_sensor_mode_init();
+	tsens8x60_sensor_mode_init();
 
 	rc = request_irq(TSENS_UPPER_LOWER_INT, tsens_isr,
 		IRQF_TRIGGER_RISING, "tsens_interrupt", tmdev);
