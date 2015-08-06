@@ -443,8 +443,11 @@ int tps_set_charger_ctrl(u32 ctl)
 		if (tps65200_low_chg)
 			regh |= 0x08;	
 		tps65200_i2c_write_byte(regh, 0x03);
-		
-		regh = 0xFF;
+		regh = 0xA3;
+#ifdef CONFIG_SUPPORT_DQ_BATTERY
+		if (htc_is_dq_pass)
+			regh = 0xAA;
+#endif
 		tps65200_i2c_write_byte(regh, 0x02);
 
 		tps65200_i2c_read_byte(&regh, 0x01);
